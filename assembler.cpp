@@ -3,7 +3,6 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-
 using namespace std;
 
 vector<vector<string>> AssemblyCode; 
@@ -13,6 +12,42 @@ vector<string> MachineCode;
 
 string convertOpCode(string operation);
 bool checkLabel(string label);
+
+int operandBinaryNum[5];
+int bitBinary[32]={};
+
+void decToBinary(string num)
+{
+    int binary = stoi(num);
+    // counter for binary array
+    int i = 0;
+
+    while (binary > 0) {
+
+        // storing remainder in binary array in reverse order (first index in array is last number)
+        operandBinaryNum[i]= binary % 2;
+		binary = binary / 2;
+        i++;
+    }
+
+}
+
+void decToBinary32Bit(string num)
+{
+    int binary = stoi(num);
+    // counter for binary array
+    int i = 0;
+
+    while (binary > 0) {
+
+        // storing remainder in binary array in reverse order (first index in array is last number)
+        bitBinary[i]= binary % 2;
+		binary = binary / 2;
+        i++;
+    }
+
+}
+
 
 void load()
 {
@@ -137,10 +172,10 @@ void firstPass()
 				{
 					if(checkLabel(AssemblyCode.at(i).at(0)))
 					{
-						cout << "ADDING: " << AssemblyCode.at(i).at(0) << endl;
+
 						vector<string> temp;
 						temp.push_back(AssemblyCode.at(i).at(0));
-						temp.push_back("NULL");
+						temp.push_back("BaBy");
 						labelTable.push_back(temp);
 
 					}
@@ -151,6 +186,16 @@ void firstPass()
 					{
 
 						operand = AssemblyCode.at(i).at(2);
+
+						if(checkLabel(AssemblyCode.at(i).at(2)))
+						{
+
+							vector<string> temp;
+							temp.push_back(AssemblyCode.at(i).at(2) + ':');
+							temp.push_back("BaBy");
+							labelTable.push_back(temp);
+
+						}
 
 					}
 					else
@@ -172,6 +217,16 @@ void firstPass()
 						operand = AssemblyCode.at(i).at(1);
 
 
+						if(checkLabel(AssemblyCode.at(i).at(1)))
+						{
+
+							vector<string> temp;
+							temp.push_back(AssemblyCode.at(i).at(1)+ ':');
+							temp.push_back("BaBy");
+							labelTable.push_back(temp);
+
+						}
+
 					}
 					else
 					{
@@ -182,7 +237,6 @@ void firstPass()
 
 				}
 
-				//cout << "OPERANDL: " << operand << "| opCode: " << opcode << endl;
 				MachineCode.push_back(operand + "00000000" + opcode + "0000000000000000");
 
 				i++;
@@ -191,13 +245,13 @@ void firstPass()
 
 			if(AssemblyCode.at(i).at(0) == "END:")
 			{
+
 				if(checkLabel(AssemblyCode.at(i).at(0)))
 				{
 					
-					cout << "ADDING: " << AssemblyCode.at(i).at(0) << endl;
 					vector<string> temp;
 					temp.push_back(AssemblyCode.at(i).at(0));
-					temp.push_back("NULL");
+					temp.push_back("BaBy");
 					labelTable.push_back(temp);
 
 				}
@@ -207,13 +261,37 @@ void firstPass()
 			}
 
 			// VARAIBLES
-
 			for(unsigned int j = i +1;j<AssemblyCode.size();j++)
 			{
 
-				for(unsigned int k = 0; k< labelTable.size();k++)
+				decToBinary32Bit(AssemblyCode.at(j).at(2));
+
+				string binary;
+
+				for (unsigned int m = 0; m<32;m++)
 				{
 
+					binary.assign(bitBinary[m]);	
+					cout << bitBinary[m];
+
+				}
+				cout << endl;
+
+				cout << "BINARY " << binary << endl;
+
+				MachineCode.push_back(binary);
+
+
+
+				for(unsigned int k =  0; k<labelTable.size(); k++)
+				{
+
+					if(AssemblyCode.at(j).at(0) == labelTable.at(k).at(0))
+					{
+
+						labelTable.at(k).at(1) = to_string(j);
+
+					}
 
 				}
 
@@ -225,11 +303,45 @@ void firstPass()
 
 }
 
+void secondPass()
+{
+
+	for(unsigned int i = 0; i < MachineCode.size(); i++)
+	{
+		string temp = MachineCode.at(i);
+		string check;
+		check += temp.at(0);
+		check += temp.at(1);
+		check += temp.at(2);
+		check += temp.at(3);
+		check += temp.at(4);
+		check += ':';
+
+		if(checkLabel(check) == false)
+		{
+
+			//decToBinary(check);
+
+			for(int j = 0; j <5;j++)
+			{
+
+				temp.at(j) = operandBinaryNum[j];
+
+			}
+
+			MachineCode[i] = temp;
+
+		}
+
+	}
+
+}
+
+
 string convertOpCode(string operation)
 {
 
 	string opCode;
-	cout << operation << endl;
 
 	if (operation == "JMP")
 	{
@@ -276,7 +388,7 @@ string convertOpCode(string operation)
 	else
 	{
 
-		//cout << "Invalid Opcode" << endl;
+		cout << "Invalid Opcode" << endl;
 		opCode = "666";
 
 	}
@@ -285,6 +397,8 @@ string convertOpCode(string operation)
 
 
 }
+
+
 void displayMachineCode()
 {
 
@@ -297,14 +411,16 @@ void displayMachineCode()
 
 void displayLabelTable()
 {
-	cout << "BUCKET: " << labelTable.size() << endl;
 	for(unsigned int i = 0; i < labelTable.size(); i++)
 	{	
 
-		for(unsigned int j = 0; i < labelTable.at(i).size(); i++)
+		for(unsigned int j = 0; j < labelTable.at(i).size(); j++)
 		{
-			cout << labelTable.at(i).at(j);
+
+			cout << labelTable.at(i).at(j) << " ";
+
 		}
+
 		cout << endl;
 	}
 
@@ -313,8 +429,9 @@ int main()
 {
 
 	load();
-	printAssemblyCode();
+	//printAssemblyCode();
 	firstPass();
+	secondPass();
 	displayMachineCode();
 	displayLabelTable();
 
