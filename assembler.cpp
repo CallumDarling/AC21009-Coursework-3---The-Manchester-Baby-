@@ -264,6 +264,7 @@ void firstPass()
 			for(unsigned int j = i +1;j<AssemblyCode.size();j++)
 			{
 
+/*
 				decToBinary32Bit(AssemblyCode.at(j).at(2));
 
 				string binary;
@@ -277,11 +278,11 @@ void firstPass()
 				}
 				cout << endl;
 
-				cout << "BINARY " << binary << endl;
+				cout << "BINARY: " << binary << endl;
 
 				MachineCode.push_back(binary);
 
-
+*/
 
 				for(unsigned int k =  0; k<labelTable.size(); k++)
 				{
@@ -319,17 +320,25 @@ void secondPass()
 
 		if(checkLabel(check) == false)
 		{
-
-			//decToBinary(check);
-
-			for(int j = 0; j <5;j++)
+			for(unsigned int k = 0; k< labelTable.size(); k++)
 			{
 
-				temp.at(j) = operandBinaryNum[j];
+				if(labelTable.at(k).at(0) == check)
+				{
+
+					decToBinary(labelTable.at(k).at(1));
+					for(int j = 0; j <5;j++)
+					{
+
+						temp.at(j) = operandBinaryNum[j];
+
+					}
+
+					MachineCode[i] = temp;
+
+				}
 
 			}
-
-			MachineCode[i] = temp;
 
 		}
 
@@ -429,11 +438,8 @@ int main()
 {
 
 	load();
-	//printAssemblyCode();
 	firstPass();
 	secondPass();
 	displayMachineCode();
-	displayLabelTable();
-
 
 }
