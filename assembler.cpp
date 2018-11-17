@@ -13,38 +13,90 @@ vector<string> MachineCode;
 string convertOpCode(string operation);
 bool checkLabel(string label);
 
-int operandBinaryNum[5];
-int bitBinary[32]={};
+string operandBinaryNum;
+string bitBinary;
 
-void decToBinary(string num)
+void decTo5Binary(string num)
 {
-    int binary = stoi(num);
-    // counter for binary array
-    int i = 0;
 
-    while (binary > 0) {
+    unsigned long long int binary = stoi(num);
+    unsigned long long int c = 16;
+   
+   	operandBinaryNum = "";
 
-        // storing remainder in binary array in reverse order (first index in array is last number)
-        operandBinaryNum[i]= binary % 2;
-		binary = binary / 2;
-        i++;
+
+    for(int i =0; i< 32; i++)
+    {
+
+        if(binary >= c)
+        {
+
+            operandBinaryNum += '1';
+            binary -= c;
+
+        }
+        else
+        {
+
+            operandBinaryNum += '0';
+
+        }
+
+        c /=2;
     }
+
+    string temp;
+    
+    for(int i =4; i>=0; i--)
+    {
+        
+        temp += operandBinaryNum[i];
+
+    }
+
+    operandBinaryNum = temp;
 
 }
 
-void decToBinary32Bit(string num)
+
+void decTo32Binary(string num)
 {
-    int binary = stoi(num);
-    // counter for binary array
-    int i = 0;
 
-    while (binary > 0) {
+    unsigned long long int binary = stoi(num);
+    unsigned long long int c = 2147483648;
 
-        // storing remainder in binary array in reverse order (first index in array is last number)
-        bitBinary[i]= binary % 2;
-		binary = binary / 2;
-        i++;
+    bitBinary ="";
+   
+    for(int i =0; i< 32; i++)
+    {
+
+        if(binary >= c)
+        {
+
+            bitBinary += '1';
+            binary -= c;
+
+        }
+        else
+        {
+
+            bitBinary += '0';
+
+        }
+
+        c /=2;
     }
+
+    string temp;
+    
+    for(int i =31; i>=0; i--)
+    {
+        
+        temp += bitBinary[i];
+
+    }
+
+    bitBinary = temp;
 
 }
 
@@ -264,25 +316,9 @@ void firstPass()
 			for(unsigned int j = i +1;j<AssemblyCode.size();j++)
 			{
 
-/*
-				decToBinary32Bit(AssemblyCode.at(j).at(2));
+				decTo32Binary(AssemblyCode.at(j).at(2));
 
-				string binary;
-
-				for (unsigned int m = 0; m<32;m++)
-				{
-
-					binary.assign(bitBinary[m]);	
-					cout << bitBinary[m];
-
-				}
-				cout << endl;
-
-				cout << "BINARY: " << binary << endl;
-
-				MachineCode.push_back(binary);
-
-*/
+				MachineCode.push_back(bitBinary);
 
 				for(unsigned int k =  0; k<labelTable.size(); k++)
 				{
@@ -320,14 +356,16 @@ void secondPass()
 
 		if(checkLabel(check) == false)
 		{
+
 			for(unsigned int k = 0; k< labelTable.size(); k++)
 			{
 
 				if(labelTable.at(k).at(0) == check)
 				{
+					
+					decTo5Binary(labelTable.at(k).at(1));
 
-					decToBinary(labelTable.at(k).at(1));
-					for(int j = 0; j <5;j++)
+					for(unsigned int j = 0; j <5;j++)
 					{
 
 						temp.at(j) = operandBinaryNum[j];
@@ -420,6 +458,7 @@ void displayMachineCode()
 
 void displayLabelTable()
 {
+
 	for(unsigned int i = 0; i < labelTable.size(); i++)
 	{	
 
@@ -439,6 +478,7 @@ int main()
 
 	load();
 	firstPass();
+	//displayLabelTable();
 	secondPass();
 	displayMachineCode();
 
