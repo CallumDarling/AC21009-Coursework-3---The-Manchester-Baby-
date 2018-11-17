@@ -11,6 +11,9 @@ vector<vector<string>> labelTable;
 vector<string> MachineCode;
 
 
+string convertOpCode(string operation);
+bool checkLabel(string label);
+
 void load()
 {
 
@@ -94,6 +97,19 @@ void printAssemblyCode()
 
 }
 
+bool checkLabel(string label)
+{
+
+	for(unsigned int i = 0; i < labelTable.size(); i++)
+	{	
+
+		if(labelTable.at(i).at(0) == label)
+			return false;
+	}
+	return true;
+}
+
+
 void firstPass()
 {
 
@@ -109,38 +125,166 @@ void firstPass()
 		MachineCode.push_back("00000000000000000000000000000000");
 
 		int i = 1;
+		string opcode;
+		string operand;
 
 		if(AssemblyCode.at(i).at(0) == "START:")
 		{
-			
+
 			do 
-			{
-				
-				if(i == 1)
+			{	
+				if(AssemblyCode.at(i).at(0).find(':')!=string::npos)
+				{
+					if(checkLabel(AssemblyCode.at(i).at(0)))
+					{
+						cout << "ADDING: " << AssemblyCode.at(i).at(0) << endl;
+						vector<string> temp;
+						temp.push_back(AssemblyCode.at(i).at(0));
+						temp.push_back("NULL");
+						labelTable.push_back(temp);
+
+					}
+
+					opcode = convertOpCode(AssemblyCode.at(i).at(1));
+
+					if(AssemblyCode.at(i).size() == 3)
+					{
+
+						operand = AssemblyCode.at(i).at(2);
+
+					}
+					else
+					{
+
+						operand = "00000";
+
+					}
+
+				}
+				else
 				{
 
+					opcode = convertOpCode(AssemblyCode.at(i).at(0));
 
+					if(AssemblyCode.at(i).size() == 2)
+					{
+
+						operand = AssemblyCode.at(i).at(1);
+
+
+					}
+					else
+					{
+
+						operand = "00000";
+
+					}
 
 				}
 
+				//cout << "OPERANDL: " << operand << "| opCode: " << opcode << endl;
+				MachineCode.push_back(operand + "00000000" + opcode + "0000000000000000");
 
 				i++;
 
-				if(AssemblyCode.at(i).at(0) != "END:")
-				{
+			}while (AssemblyCode.at(i).at(0) != "END:");
 
-					MachineCode.push_back("11100000000000000000000000000000");
+			if(AssemblyCode.at(i).at(0) == "END:")
+			{
+				if(checkLabel(AssemblyCode.at(i).at(0)))
+				{
+					
+					cout << "ADDING: " << AssemblyCode.at(i).at(0) << endl;
+					vector<string> temp;
+					temp.push_back(AssemblyCode.at(i).at(0));
+					temp.push_back("NULL");
+					labelTable.push_back(temp);
 
 				}
 
-			}while (AssemblyCode.at(i).at(0) != "END:");
-			
+				MachineCode.push_back("00000000000001110000000000000000");
+
+			}
+
+			// VARAIBLES
+
+			for(unsigned int j = i +1;j<AssemblyCode.size();j++)
+			{
+
+				for(unsigned int k = 0; k< labelTable.size();k++)
+				{
+
+
+				}
+
+			} 
+		
 		}
 		
 	}
 
 }
 
+string convertOpCode(string operation)
+{
+
+	string opCode;
+	cout << operation << endl;
+
+	if (operation == "JMP")
+	{
+
+		opCode = "000";
+
+	}
+	else if (operation == "JRP")
+	{
+
+		opCode = "100";
+
+	}
+	else if (operation == "LDN")
+	{
+
+		opCode = "010";
+
+	}
+	else if (operation == "STO")
+	{
+
+		opCode = "110";
+
+	}
+	else if (operation == "SUB")
+	{
+
+		opCode = "101";
+
+	}
+	else if (operation == "CMP")
+	{
+
+		opCode = "011";
+
+	}
+		else if (operation == "STP")
+	{
+
+		opCode = "111";
+
+	}
+	else
+	{
+
+		//cout << "Invalid Opcode" << endl;
+		opCode = "666";
+
+	}
+
+	return opCode;
+
+
+}
 void displayMachineCode()
 {
 
@@ -151,6 +295,20 @@ void displayMachineCode()
 
 }
 
+void displayLabelTable()
+{
+	cout << "BUCKET: " << labelTable.size() << endl;
+	for(unsigned int i = 0; i < labelTable.size(); i++)
+	{	
+
+		for(unsigned int j = 0; i < labelTable.at(i).size(); i++)
+		{
+			cout << labelTable.at(i).at(j);
+		}
+		cout << endl;
+	}
+
+}
 int main()
 {
 
@@ -158,6 +316,7 @@ int main()
 	printAssemblyCode();
 	firstPass();
 	displayMachineCode();
+	displayLabelTable();
 
 
 }
