@@ -332,6 +332,7 @@ reverse(begin(accumulator), end(accumulator));
 
 void stp()
 {
+	//change the system status to false so the program stops
 	status = false;
 }
 
