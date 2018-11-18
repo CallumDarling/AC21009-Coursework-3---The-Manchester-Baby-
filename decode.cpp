@@ -255,8 +255,7 @@ void sub(int num)
 	{
 		answer[i] = accumulator[i] - machineCode[num][i];
 		
-
-		if (carry == true)
+			if (carry > 0 && answer[i]==1)
 		{
 			answer[i] = answer[i] - 1;
 		}
@@ -264,7 +263,7 @@ void sub(int num)
 		if (answer[i] == -1)
 		{
 			answer[i] = answer[i] + 2;
-			carry = true;
+			carry++;
 		}
 
 		
