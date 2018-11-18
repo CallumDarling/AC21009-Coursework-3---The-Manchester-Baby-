@@ -17,8 +17,8 @@ int control[32] = {};
 int ci = 0;
 int currentInstruction[32] = {};
 int pi[32] = {};
-int function = 0;
 int operand = 0;
+int function1 = 0;
 bool status = true;
 
 
@@ -112,61 +112,61 @@ void decode(vector<int> code)
 	operand = (code[0]*1 + code[1]*2 + code[2]*4 + code[3]*8 + code[4]*16);
 	
 
-	function = (code[13]*1 + code[14]*2 + code[15]*4);
+	function1 = (code[13]*1 + code[14]*2 + code[15]*4);
 
 }
 
 void execute()
 {
 	//decode comentary menominics, binary and operand
-	switch (function)
+	switch (function1)
 	{
 	case 0:cout << " EXECUTING JMP-" << endl;
 		cout << "operand: " << operand << endl;
-		cout << "function: " << function << endl;
+		cout << "function: " << function1 << endl;
 		cout << "Set CI to content of memory location " << operand << endl;
 		jmp(operand);
 		break;
 	case 1: cout << " EXECUTING JRP-" << endl;
 		cout << "operand: " << operand << endl;
-		cout << "function: " << function << endl;
+		cout << "function: " << function1 << endl;
 		cout << "Add content of Memory Location " << operand <<" to control instruction "<<endl;
 		jrp(operand);
 		break;
 	case 2: cout << " EXECUTING LDN-" << endl;
 		cout << "operand: " << operand << endl;
-		cout << "function: " << function << endl;
+		cout << "function: " << function1 << endl;
 		cout << "Load Accumulator with negative form of memory location " << operand << endl;
 		ldn(operand);
 		break;
 	case 3: cout << " EXECUTING STO-" << endl;
 		cout << "operand: " << operand << endl;
-		cout << "function: " << function << endl;
+		cout << "function: " << function1 << endl;
 		cout << "Copy Accumulator to memory location " << operand << endl;
 		sto(operand);
 		break;
 	case 4: cout << " EXECUTING SUB-" << endl;
 		cout << "operand: " << operand << endl;
-		cout << "function: " << function << endl;
+		cout << "function: " << function1 << endl;
 		cout << " subtract content of Memory location " << operand << " from Accumulator" << endl;
 
 		sub(operand);
 		break;
 	case 5: cout << " EXECUTING SUB-" << endl;
 		cout << "operand: " << operand << endl;
-		cout << "function: " << function << endl;
+		cout << "function: " << function1 << endl;
 		cout << " subtract content of Memory location " << operand << " from Accumulator" << endl;
 		sub(operand);
 		break;
 	case 6: cout << " EXECUTING CMP-" << endl;
 		cout << "operand: " << operand << endl;
-		cout << "function: " << function << endl;
+		cout << "function: " << function1 << endl;
 		cout << "increment CI if Accumulator value negative, otherwise do nothing" << endl;
 		cmp();
 		break;
 	case 7: cout << " EXECUTING STP-" << endl;
 		cout << "operand: " << operand << endl;
-		cout << "function: " << function << endl;
+		cout << "function: " << function1 << endl;
 		stp();
 		break;
 	}
