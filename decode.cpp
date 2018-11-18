@@ -320,6 +320,13 @@ void sub(int num)
 
 void cmp()
 {
+reverse(begin(accumulator), end(accumulator));
+
+	//if the last index of the twos' complementary is 1 then it is a negative number 
+	if (accumulator[31] == 1)
+	{
+		ci = ci + 1;
+	}
 
 }
 
