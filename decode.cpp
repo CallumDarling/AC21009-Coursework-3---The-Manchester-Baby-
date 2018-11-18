@@ -118,6 +118,7 @@ void decode(vector<int> code)
 
 void execute()
 {
+	//decode comentary menominics, binary and operand
 	switch (function)
 	{
 	case 0:cout << " EXECUTING JMP-" << endl;
@@ -129,6 +130,7 @@ void execute()
 	case 1: cout << " EXECUTING JRP-" << endl;
 		cout << "operand: " << operand << endl;
 		cout << "function: " << function << endl;
+		cout << "Add content of Memory Location " << operand <<" to control instruction "<<endl;
 		jrp(operand);
 		break;
 	case 2: cout << " EXECUTING LDN-" << endl;
@@ -159,6 +161,7 @@ void execute()
 	case 6: cout << " EXECUTING CMP-" << endl;
 		cout << "operand: " << operand << endl;
 		cout << "function: " << function << endl;
+		cout << "increment CI if Accumulator value negative, otherwise do nothing" << endl;
 		cmp();
 		break;
 	case 7: cout << " EXECUTING STP-" << endl;
