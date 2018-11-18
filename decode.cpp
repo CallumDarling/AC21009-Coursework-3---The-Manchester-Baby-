@@ -173,6 +173,7 @@ void execute()
 
 void jmp(int num)
 {
+	//make current isntruction point to machine code 
 	cout << " CI = ";
 	for (int index = 0; index < 32; index++)
 	{
@@ -183,7 +184,46 @@ void jmp(int num)
 
 void jrp(int num)
 {
+	int answer[32] = {};
+	int carry = 0;
 
+	//does the addition
+	for (int i = 0; i < 32; i++)
+	{
+		//add the ones and zeros
+		answer[i] = currentInstruction[i] + machineCode[num][i];
+
+
+		//if we have a carry
+		if (carry > 0 )
+		{
+			answer[i] = answer[i] + carry;
+			carry--;
+		}
+		//if we have 1+1 increase the carry 
+		if (answer[i] == 2)
+		{
+			answer[i] = 0;
+			carry++;
+		}
+
+
+	}
+
+	//set answer to instruction
+	for (int i = 0; i < 32; i++)
+	{
+		currentInstruction[i] = answer[i];
+	}
+	cout << endl;
+
+	//output the accumulator 
+	cout << "Accumulator: ";
+	for (int index = 0; index < 32; index++)
+	{
+		cout << accumulator[index];
+	}
+	cout << endl;
 }
 
 void ldn(int num)
