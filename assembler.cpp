@@ -1,3 +1,11 @@
+// Team 13
+// Joel Sieber
+// Alexander Arnaudov
+// Patryk Jakubek
+// Błażej Byczkowski
+// Callum Darling
+
+
 #include <iostream>
 #include <vector>
 #include <string>
