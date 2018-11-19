@@ -11,17 +11,25 @@
 
 using namespace std;
 
-vector< vector<int> > machineCode;
-int accumulator[32] = {};
-int control[32] = {};
-int ci = 0;
-int currentInstruction[32] = {};
-int pi[32] = {};
-int operand = 0;
-int function1 = 0;
-bool status = true;
 
+//initializing variables 
+vector< vector<int> > machineCode; //stores machine code from file 
+int accumulator[32] = {}; // accumulator of the program
+int ci = 0; //current instruction counter 
+int currentInstruction[32] = {};// holds current instruction
+int pi[32] = {}; // holds present instruction
+int operand = 0; // location in memory 
+int function1 = 0; // function to use 
+bool status = true; // indicates that machine is running
 
+//function headers 
+int load();
+void output();
+void fetch();
+void decode(vector<int>);
+void execute();
+
+//instruction sets function headers
 void jmp(int);
 void jrp(int);
 void ldn(int);
@@ -70,6 +78,7 @@ int load()
 
 void output()
 {
+	//creates to vectors to iterate through machine code 
 	vector< vector<int> >::const_iterator row;
 	vector<int>::const_iterator col;
 
@@ -109,9 +118,10 @@ void fetch()
 
 void decode(vector<int> code)
 {
+	//first five digits determine the operand 
 	operand = (code[0]*1 + code[1]*2 + code[2]*4 + code[3]*8 + code[4]*16);
 	
-
+	//digits 13,14,15 determine the function 
 	function1 = (code[13]*1 + code[14]*2 + code[15]*4);
 
 }
@@ -239,6 +249,8 @@ void ldn(int num)
 
 	int ones[32];
 
+
+	//switching bits 
 	for ( i = 0; i < 32; i++)
 	{
 		if (machineCode[num][i] == 1)
@@ -252,6 +264,8 @@ void ldn(int num)
 		
 	}
 	
+
+	//adding 1 
 	for (i = 31; i > 0; i--)
 	{
 		if (ones[i] == 1 )
@@ -275,12 +289,13 @@ void ldn(int num)
 
 void sto(int num)
 {
-
+	//copying accumulator to store location
 	for(int i = 0; i<32;i++)
 	{
 		machineCode[num][i] = accumulator[i];
 	}
 
+	//output accumulator
 	cout << "Accumulator: ";
 	for (int index = 0; index < 32; index++)
 	{
@@ -292,15 +307,19 @@ void sto(int num)
 void sub(int num)
 {
 	int answer[32] = {};
-	bool carry = false;
+	int carry = 0;
 
+	//performing binary division
 	for (int i = 0; i < 32; i++)
 	{
 		answer[i] = accumulator[i] - machineCode[num][i];
 		
+
+		//carying 1s 
 			if (carry > 0 && answer[i]==1)
 		{
 			answer[i] = answer[i] - 1;
+			carry--;
 		}
 
 		if (answer[i] == -1)
@@ -312,6 +331,7 @@ void sub(int num)
 		
 	}
 	
+	//output accumulator
 	cout << "Accumulator: ";
 	for (int index = 0; index < 32; index++)
 	{
@@ -343,7 +363,7 @@ void stp()
 int main()
 {
 
-	
+	//run the Manchester Baby
 	load();
 
 		for (size_t  i = 0; i < machineCode.size(); i++)
