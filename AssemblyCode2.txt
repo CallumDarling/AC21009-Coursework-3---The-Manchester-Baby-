@@ -1,0 +1,24 @@
+          VAR 0       ; Declare 32-bit variable to fill space 
+START:    LDN NUM01   ; Copy variable to accumulator (negated)
+          SUB NUM02   ; Subtract variable from accumulator to get sum (negated)
+          STO MYSUM   ; Store accumulator to variable - saves answer
+          LDN MYSUM   ; Copy variable to accumulator (negated)
+          SUB NUM03
+          SUB NUM04
+          SUB NUM05
+          SUB NUM06
+          SUB NUM07
+          SUB NUM08
+          STO MYSUM
+END:      STP         ; Stop processor
+
+
+NUM01:    VAR 1025    ; Declare 32-bit variable
+NUM02:    VAR 621     ; Declare 32-bit variable
+NUM03:    VAR 4     ; Declare 32-bit variable
+NUM04:    VAR 141     ; Declare 32-bit variable
+NUM05:    VAR 112     ; Declare 32-bit variable
+NUM06:    VAR 1231     ; Declare 32-bit variable
+NUM07:    VAR 56     ; Declare 32-bit variable
+NUM08:    VAR 21     ; Declare 32-bit variable
+MYSUM:    VAR 0       ; Declare 32-bit variable
